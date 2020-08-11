@@ -33,12 +33,8 @@ public class Main {
                         }
                         Matcher matcher = Pattern.compile("^L (\\d+) (\\d+) (\\d+) (\\d+)$").matcher(line);
                         if (matcher.find()) {
-                            int startingX = Integer.parseInt(matcher.group(1));
-                            int startingY = Integer.parseInt(matcher.group(2));
-                            int endingX = Integer.parseInt(matcher.group(3));
-                            int endingY = Integer.parseInt(matcher.group(4));
+                            createLine(canvas, matcher);
 
-                            canvas.createNewLine(startingX, startingY, endingX, endingY);
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new line command. Should be: L <starting x> <starting y> <ending x> <ending y>");
                         }
@@ -135,6 +131,14 @@ public class Main {
                 }
             }
         }
+    }
+
+    private void createLine(Canvas canvas, Matcher matcher) {
+        int startingX = Integer.parseInt(matcher.group(1));
+        int startingY = Integer.parseInt(matcher.group(2));
+        int endingX = Integer.parseInt(matcher.group(3));
+        int endingY = Integer.parseInt(matcher.group(4));
+        canvas.createNewLine(startingX, startingY, endingX, endingY);
     }
 
     public static void main(String[] args) {
