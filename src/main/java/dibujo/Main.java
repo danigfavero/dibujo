@@ -17,8 +17,7 @@ public class Main {
                 String line = scanner.nextLine();
 
                 try {
-                    Command command = new Command(String.valueOf(line.charAt(0)));
-                    if (Command.valueOf(command)) {
+                    if (Command.containsCharacter(line)) {
                         Matcher matcher = Pattern.compile("^C (\\d+) (\\d+)$").matcher(line);
                         if (matcher.find()) {
                             int width = Integer.parseInt(matcher.group(1));
@@ -28,53 +27,43 @@ public class Main {
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new canvas command. Should be: C <width> <height>");
                         }
-                    } else if (line.startsWith("L")) {
+                    } else if (Command.containsCharacter(line)) {
                         if (canvas == null) {
                             throw new RuntimeException("No canvas. You should create a canvas before creating a new line.");
                         }
                         Matcher matcher = Pattern.compile("^L (\\d+) (\\d+) (\\d+) (\\d+)$").matcher(line);
                         if (matcher.find()) {
-                            createLine(canvas, matcher);
+                            createLine(matcher);
 
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new line command. Should be: L <starting x> <starting y> <ending x> <ending y>");
                         }
 
-                    } else if (line.startsWith("R")) {
+                    } else if (Command.containsCharacter(line)) {
                         if (canvas == null) {
                             throw new RuntimeException("No canvas. You should create a canvas before creating a new rectangle.");
                         }
 
                         Matcher matcher = Pattern.compile("^R (\\d+) (\\d+) (\\d+) (\\d+)$").matcher(line);
                         if (matcher.find()) {
-                            int upperLeftCornerX = Integer.parseInt(matcher.group(1));
-                            int upperLeftCornerY = Integer.parseInt(matcher.group(2));
-                            int lowerRightCornerX = Integer.parseInt(matcher.group(3));
-                            int lowerRightCornerY = Integer.parseInt(matcher.group(4));
-
-                            canvas.createNewRectangle(upperLeftCornerX, upperLeftCornerY, lowerRightCornerX, lowerRightCornerY);
+                            createNewRectangle(matcher);
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new rectangle command. Should be: L <upper left corner x> <upper left corner y> <lower right corner x> <lower right corner y>");
                         }
 
-                    } else if (line.startsWith("B")) {
+                    } else if (Command.containsCharacter(line)) {
                         if (canvas == null) {
                             throw new RuntimeException("No canvas. You should create a canvas before filling it.");
                         }
 
                         Matcher matcher = Pattern.compile("^B (\\d+) (\\d+) (\\w+)$").matcher(line);
                         if (matcher.find()) {
-                            int startingX = Integer.parseInt(matcher.group(1));
-                            int startingY = Integer.parseInt(matcher.group(2));
-                            String colorCharacter = matcher.group(3);
-
-                            Position startingPositionToFill = new Position(startingX, startingY);
-                            canvas.fill(startingPositionToFill, colorCharacter);
+                            fill(matcher);
                         } else {
                             throw new RuntimeException("Invalid parameters for the bucket fill command. Should be: B <starting x> <starting y> <color>");
                         }
 
-                    } else if (line.startsWith("Q")) {
+                    } else if (Command.containsCharacter(line)) {
                         out.println("Bye bye!");
                         System.exit(0);
                     } else {
@@ -134,12 +123,29 @@ public class Main {
         }
     }
 
-    private void createLine(Canvas canvas, Matcher matcher) {
+    private void createLine(Matcher matcher) {
         int startingX = Integer.parseInt(matcher.group(1));
         int startingY = Integer.parseInt(matcher.group(2));
         int endingX = Integer.parseInt(matcher.group(3));
         int endingY = Integer.parseInt(matcher.group(4));
         canvas.createNewLine(startingX, startingY, endingX, endingY);
+    }
+
+    private void createNewRectangle(Matcher matcher){
+        int upperLeftCornerX = Integer.parseInt(matcher.group(1));
+        int upperLeftCornerY = Integer.parseInt(matcher.group(2));
+        int lowerRightCornerX = Integer.parseInt(matcher.group(3));
+        int lowerRightCornerY = Integer.parseInt(matcher.group(4));
+        canvas.createNewRectangle(upperLeftCornerX, upperLeftCornerY, lowerRightCornerX, lowerRightCornerY);
+    }
+
+    private void fill(Matcher matcher){
+        int startingX = Integer.parseInt(matcher.group(1));
+        int startingY = Integer.parseInt(matcher.group(2));
+        String colorCharacter = matcher.group(3);
+
+        Position startingPositionToFill = new Position(startingX, startingY);
+        canvas.fill(startingPositionToFill, colorCharacter);
     }
 
     public static void main(String[] args) {
