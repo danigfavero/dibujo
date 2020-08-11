@@ -1,5 +1,4 @@
 package dibujo;
-
 import java.util.stream.Stream;
 
 public enum Command {
@@ -22,4 +21,5 @@ public enum Command {
     public static boolean containsCharacter(String character){
         return Stream.of(Command.values()).anyMatch(c -> c.getCharacter().startsWith(character));
     }
+
 }

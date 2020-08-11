@@ -15,9 +15,10 @@ public class Main {
             out.print("\nenter command: ");
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                try {
 
-                    if (line.startsWith("C")) {
+                try {
+                    Command command = new Command(String.valueOf(line.charAt(0)));
+                    if (Command.valueOf(command)) {
                         Matcher matcher = Pattern.compile("^C (\\d+) (\\d+)$").matcher(line);
                         if (matcher.find()) {
                             int width = Integer.parseInt(matcher.group(1));
