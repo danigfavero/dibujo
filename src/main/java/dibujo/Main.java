@@ -20,7 +20,7 @@ public class Main {
                     if (line.startsWith("C")) {
                         Matcher matcher = Command.CANVAS.find(line);
                         if (matcher.find()) {
-                            createCanvas(matcher);
+                            canvas = Command.findByCommand(line).get().execute(line);
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new canvas command. Should be: C <width> <height>");
                         }
@@ -77,12 +77,12 @@ public class Main {
         }
     }
 
-    private void createCanvas(Matcher matcher) {
-        int width = Integer.parseInt(matcher.group(1));
-        int height = Integer.parseInt(matcher.group(2));
-
-        canvas = new Canvas(width, height);
-    }
+//    private void createCanvas(Matcher matcher) {
+//        int width = Integer.parseInt(matcher.group(1));
+//        int height = Integer.parseInt(matcher.group(2));
+//
+//        canvas = new Canvas(width, height);
+//    }
 
     private void createLine(Matcher matcher) {
         int startingX = Integer.parseInt(matcher.group(1));
