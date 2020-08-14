@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public enum Command {
-    CANVAS("C", new CommandCanvas(), "^C (\\d+) (\\d+)$"),
+    CANVAS("C", "^C (\\d+) (\\d+)$"),
     RECTANGLE("R", new CommandRetangle(), "^R (\\d+) (\\d+) (\\d+) (\\d+)$"),
     LINE("L", new CommandLine(), "^L (\\d+) (\\d+) (\\d+) (\\d+)$"),
     BACKGROUND("B",new CommandBackground(), "^B (\\d+) (\\d+) (\\w+)$"),
@@ -19,6 +19,10 @@ public enum Command {
         this.commandRule = commandRule;
         this.character = character;
         this.pattern = pattern;
+    }
+
+    Command(String character, String pattern) {
+        this(character,null, pattern);
     }
 
     Command(String character){
@@ -49,7 +53,20 @@ public enum Command {
         return Stream.of(Command.values()).filter(c -> line.startsWith(c.getCharacter())).findFirst();
     }
 
+    public void execute(Matcher matcher, Canvas canvas) {
+        commandRule.execute(matcher, canvas);
+    }
+
     public Canvas execute(String line){
-        return commandRule.recebidoDaLinhaDeComando(line);
+        if (line.startsWith("C")) {
+            Matcher matcher = Pattern.compile(getPattern()).matcher(line);
+            if (matcher.find()) {
+                int width = Integer.parseInt(matcher.group(1));
+                int height = Integer.parseInt(matcher.group(2));
+
+                return new Canvas(width, height);
+            }
+        }
+        throw new RuntimeException("Invalid parameters for the create new canvas command. Should be: C <width> <height>");
     }
 }

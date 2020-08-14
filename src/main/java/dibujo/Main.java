@@ -30,7 +30,7 @@ public class Main {
                         }
                         Matcher matcher = Command.LINE.find(line);
                         if (matcher.find()) {
-                            createLine(matcher);
+                            Command.LINE.execute(matcher, canvas);
 
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new line command. Should be: L <starting x> <starting y> <ending x> <ending y>");
@@ -43,7 +43,7 @@ public class Main {
 
                         Matcher matcher = Command.RECTANGLE.find(line);
                         if (matcher.find()) {
-                            createNewRectangle(matcher);
+                            Command.RECTANGLE.execute(matcher, canvas);
                         } else {
                             throw new RuntimeException("Invalid parameters for the create new rectangle command. Should be: L <upper left corner x> <upper left corner y> <lower right corner x> <lower right corner y>");
                         }
@@ -55,13 +55,13 @@ public class Main {
 
                         Matcher matcher = Command.BACKGROUND.find(line);
                         if (matcher.find()) {
-                            fill(matcher);
+                            Command.BACKGROUND.execute(matcher, canvas);
                         } else {
                             throw new RuntimeException("Invalid parameters for the bucket fill command. Should be: B <starting x> <starting y> <color>");
                         }
 
                     } else if (line.startsWith("Q")) {
-                        out.println("Bye bye!");
+                        System.out.println("Bye bye!");
                         System.exit(0);
                     } else {
                         err.println("Invalid command: " + line + "\n");
@@ -76,39 +76,6 @@ public class Main {
             }
         }
     }
-
-//    private void createCanvas(Matcher matcher) {
-//        int width = Integer.parseInt(matcher.group(1));
-//        int height = Integer.parseInt(matcher.group(2));
-//
-//        canvas = new Canvas(width, height);
-//    }
-
-    private void createLine(Matcher matcher) {
-        int startingX = Integer.parseInt(matcher.group(1));
-        int startingY = Integer.parseInt(matcher.group(2));
-        int endingX = Integer.parseInt(matcher.group(3));
-        int endingY = Integer.parseInt(matcher.group(4));
-        canvas.createNewLine(startingX, startingY, endingX, endingY);
-    }
-
-    private void createNewRectangle(Matcher matcher){
-        int upperLeftCornerX = Integer.parseInt(matcher.group(1));
-        int upperLeftCornerY = Integer.parseInt(matcher.group(2));
-        int lowerRightCornerX = Integer.parseInt(matcher.group(3));
-        int lowerRightCornerY = Integer.parseInt(matcher.group(4));
-        canvas.createNewRectangle(upperLeftCornerX, upperLeftCornerY, lowerRightCornerX, lowerRightCornerY);
-    }
-
-    private void fill(Matcher matcher){
-        int startingX = Integer.parseInt(matcher.group(1));
-        int startingY = Integer.parseInt(matcher.group(2));
-        String colorCharacter = matcher.group(3);
-
-        Position startingPositionToFill = new Position(startingX, startingY);
-        canvas.fill(startingPositionToFill, colorCharacter);
-    }
-
 
     public static void main(String[] args) {
         new Main().run(System.in, System.out, System.err);
