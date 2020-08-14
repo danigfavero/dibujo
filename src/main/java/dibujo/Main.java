@@ -25,9 +25,7 @@ public class Main {
                             throw new RuntimeException("Invalid parameters for the create new canvas command. Should be: C <width> <height>");
                         }
                     } else if (line.startsWith("L")) {
-                        if (canvas == null) {
-                            throw new RuntimeException("No canvas. You should create a canvas before creating a new line.");
-                        }
+
                         Matcher matcher = Command.LINE.find(line);
                         if (matcher.find()) {
                             Command.LINE.execute(matcher, canvas);
@@ -37,10 +35,6 @@ public class Main {
                         }
 
                     } else if (line.startsWith("R")) {
-                        if (canvas == null) {
-                            throw new RuntimeException("No canvas. You should create a canvas before creating a new rectangle.");
-                        }
-
                         Matcher matcher = Command.RECTANGLE.find(line);
                         if (matcher.find()) {
                             Command.RECTANGLE.execute(matcher, canvas);
@@ -49,10 +43,6 @@ public class Main {
                         }
 
                     } else if (line.startsWith("B")) {
-                        if (canvas == null) {
-                            throw new RuntimeException("No canvas. You should create a canvas before filling it.");
-                        }
-
                         Matcher matcher = Command.BACKGROUND.find(line);
                         if (matcher.find()) {
                             Command.BACKGROUND.execute(matcher, canvas);
